@@ -28,7 +28,7 @@ const NewEventScreen = () => {
             <View style={styles.participantesContainer}>
                 <Text style={styles.titulo}>Participantes</Text>
                 <FlatList  data={participantes}
-                    renderItem={(object) => <Text style={styles.lista}>{object.item.nombre}</Text>}>
+                    renderItem={(object) => <View style={{justifyContent:"center"}}><Text style={styles.lista}>{object.item.nombre}</Text></View>}>
 
                 </FlatList>
 
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     },
     participantesContainer: {
         flex: 4,
+        padding:30
     },
     nuevoParticipanteContainer: {
         borderTopColor:"black",
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     },
     titulo:{
         fontSize:25,
-        marginBottom:25
+        marginBottom:20,
 
     },
     lista:{
@@ -83,8 +84,10 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: 'black',
         marginBottom: 10,
-        backgroundColor: '#bebebe',
-        shadowRadius:7
+        backgroundColor: '#fefefe',
+        shadowRadius:4,
+        justifyContent: 'center',
+        height: 30,
     
     },
 

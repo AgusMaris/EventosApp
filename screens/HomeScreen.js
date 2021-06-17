@@ -38,10 +38,9 @@ const HomeScreen = (props) => {
                 </FlatList>
             </View>
             <TouchableOpacity onPress={()=> props.navigation.navigate("Nuevo Evento")}
-                            style = {styles.nuevo}
-                            
+                            style = {styles.nuevo}             
             >
-                +
+                <Text>+</Text>
             </TouchableOpacity>
         </View>   
 
