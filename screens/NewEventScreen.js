@@ -1,33 +1,54 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { StyleSheet, Text, View, TextInput, FlatList, Button, TouchableOpacity } from 'react-native'
+import EventosContext from '../context/EventosContext'
 
-const NewEventScreen = () => {
+export function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
 
-    const [participantes, setParticipantes] = useState([
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-        { id: 1, nombre: "Agustin", asiste: false },
-        { id: 2, nombre: "Matias", asiste: false },
-    ])
+const NewEventScreen = (props) => {
+    const eventosContext = useContext(EventosContext)
+    const {eventos, agregarNuevoEvento} = eventosContext
+    const [evento, setEvento] = useState({
+        "participantes":[],
+        "nombre":""
+    })
+    const [participante, setParticipante] = useState("")
+
+    const guardarEvento=()=>{
+        agregarNuevoEvento(evento)
+        props.navigation.goBack();
+    }
+
+    const handleParticipanteInput=(val)=>{
+        setParticipante(val)
+    }
+
+    const agregarParticipante=()=>{
+        setEvento({...evento, "participantes":[...evento.participantes, {"nombre":participante, "asiste":false, id:uuidv4()}]})
+        setParticipante("")
+    }
+
+    const cambiarNombreEvento=(val)=>{
+        setEvento({...evento, "nombre":val})
+    }
+
     return (
         <View style={styles.container}>
+            {console.log(eventos)}
+            <View style={{paddingHorizontal:30}}>
+                <Text style={styles.titulo}>Evento</Text>
+                <TextInput 
+                    placeholder="Nombre" 
+                    onChangeText={(val)=>cambiarNombreEvento(val)}
+                    style={styles.textInput}/>
+                    </View>
             <View style={styles.participantesContainer}>
                 <Text style={styles.titulo}>Participantes</Text>
-                <FlatList  data={participantes}
+                <FlatList  data={evento.participantes}
                     renderItem={(object) => <View style={{justifyContent:"center"}}><Text style={styles.lista}>{object.item.nombre}</Text></View>}>
 
                 </FlatList>
@@ -37,20 +58,23 @@ const NewEventScreen = () => {
                 <View style={{ flex: 1, flexDirection: "row", alignItems:"center" }}>
                     <View style={{ flex: 4, justifyContent:"center" }}>
                         <TextInput 
+                            value={participante}
                             style={styles.textInput}
-                            placeholder="Nombre"/>
+                            placeholder="Nombre"
+                            onChangeText={(val)=>handleParticipanteInput(val)}/>
                         
                     </View>
                     <View style={{ flex: 1, justifyContent:"center" }}>
                         <TouchableOpacity
                             style={styles.nuevo}
+                            onPress={()=>agregarParticipante()}
                         >
                             +
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={{ flex: 1 }}>
-                    <Button title="Guardar evento" color="#fabe0a"  />
+                    <Button title="Guardar evento" color="#fabe0a" onPress={()=>guardarEvento()}/>
                 </View>
             </View>
 

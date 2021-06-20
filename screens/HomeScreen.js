@@ -1,7 +1,8 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import { render } from 'react-dom'
 import { Button, StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
 import NewEventScreen from './NewEventScreen'
+import EventosContext from '../context/EventosContext'
 
 function obtenerColor (i){
     const colors=["red", "orange", "green", "yellow", "lightblue"]
@@ -9,13 +10,16 @@ function obtenerColor (i){
         return colors[index]
 }
 
-function renderItem (object){
+function renderItem (object, navigate){
     
 
     return(
         <TouchableOpacity
             style={[styles.button,{backgroundColor: obtenerColor(object.index)}]}
-        >{object.item}</TouchableOpacity>
+            onPress={()=> navigate("Event",{id:object.item.id})}
+        >
+            <Text>{object.item.nombre} ({object.item.participantes.filter(p=>{return p.asiste}).length}/{object.item.participantes.length} Participantes)</Text> 
+        </TouchableOpacity>
 
 
 
@@ -24,16 +28,17 @@ function renderItem (object){
 }
 
 const HomeScreen = (props) => {
+    const eventosContext = useContext(EventosContext)
+    const {eventos, agregarNuevoEvento} = eventosContext
 
-    const EventList = ["evento1","evento2","evento3","evento3","evento3","evento3"]
     return (
         <View>
 
             <Button onPress={()=> props.navigation.navigate("Event")} title="Evento" color ="grey"></Button>
 
             <View>
-                <FlatList data = {EventList}
-                            renderItem = {(object) => renderItem(object)}>
+                <FlatList data = {eventos}
+                            renderItem = {(object) => renderItem(object, props.navigation.navigate)}>
 
                 </FlatList>
             </View>
